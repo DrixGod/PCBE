@@ -21,7 +21,7 @@ public class ContiStock implements Stock {
     }
 
     public void modifyPrice(double price){
-        stockAmount -= price;
+        stockPrice -= price;
     }
 
     @Override

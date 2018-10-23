@@ -21,7 +21,7 @@ public class NokiaStock implements Stock {
     }
 
     public void modifyPrice(double price){
-        stockAmount -= price;
+        stockPrice -= price;
     }
 
     public void subtractAmount(int amount){

@@ -21,12 +21,13 @@ public class Trading implements Runnable {
                 e.printStackTrace();
             }
 
-            // Generates a random number between -.03 and .03
-            double stockChange = (Math.random() * (.06)) - .03;
+            // Generates a random number between -.3 and .3
+            double stockChange = (Math.random() * (.6) - 0.3);
             stock.modifyPrice(stockChange);
             System.out.println(stock + " Amount: " + stock.getAmount() + " Price: " + stock.getPrice() + " Change: " + stockChange);
-            if(buyer.getStartingSum() == stock.getPrice()){
-                while (stock.getAmount()>0 && buyer.getMoney()>stock.getPrice()){
+            if(buyer.getStartingSum() >= stock.getPrice()){
+                System.out.println("Selling");
+                if(stock.getAmount()>0 && buyer.getMoney()>stock.getPrice()){
                     buyer.addStocks();
                     stock.subtractAmount(1);
                 }
