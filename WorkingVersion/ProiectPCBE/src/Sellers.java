@@ -1,5 +1,10 @@
 public class Sellers implements Runnable{
 	
+	@Override
+	public String toString() {
+		return "Seller " + sellerID + " from " + companyName + " got out of stocks!";
+	}
+
 	private static int totalSellers = 0;
 	private int sellerID;
 	private String companyName;
@@ -15,16 +20,17 @@ public class Sellers implements Runnable{
 	@Override
 	public void run() {
 		System.out.println("Seller " + sellerID + " started!");
-			for(int i=0; i<10; i++) {
-				int sleepTime = Main.randomWithRange(0, 0);
-				try {
+		try {
+			for(;;) {
+				int sleepTime = Main.randomWithRange(1, 3)*1000;
 					Thread.sleep(sleepTime);
 					Stock stockToSell = Stock.createRandomStock(this.companyName);
 					putOnSale(stockToSell, this.manager);
-				}catch(InterruptedException e) {
-					e.printStackTrace();
-				}
 			}
+		}catch(InterruptedException e) {
+				System.out.println(this);
+		}
+			
 	}
 	
 	public void putOnSale(Stock stock, StockManager manager) throws InterruptedException {

@@ -21,17 +21,16 @@ public class Buyers implements Runnable{
 		System.out.println("Buyer " + buyerID + " started!");
 		try {
 			Stock request = Stock.createRandomStock(this.companyName);
-			for(int i=0; i<10; i++) {
-				int sleepTime = Main.randomWithRange(0, 0);
+			for(;;) {
+				int sleepTime = Main.randomWithRange(2, 6)*1000;
 				Thread.sleep(sleepTime);
 				if(tryToBuy(request)) {
 					request = Stock.createRandomStock(this.companyName);		
 				}
 			}
 		}catch(InterruptedException e) {
-			e.printStackTrace();
+			System.out.println(this);
 		}
-		
 	}
 
 	public int getBuyerID() {
@@ -44,7 +43,7 @@ public class Buyers implements Runnable{
 	
 	@Override
 	public String toString() {
-		return "Buyer " + buyerID + " bought " + boughtStocks.size() + " stocks " + boughtStocks;
+		return "Buyer " + buyerID + " stoped buying.\nHe bought " + boughtStocks.size() + " stocks " + boughtStocks;
 	}
 
 	public boolean tryToBuy(Stock request) throws InterruptedException {
