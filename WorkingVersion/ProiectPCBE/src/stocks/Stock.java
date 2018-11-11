@@ -1,3 +1,6 @@
+package stocks;
+
+import utils.RandomRange;
 
 public class Stock {
 	
@@ -31,14 +34,14 @@ public class Stock {
 	}
 	
 	public static Stock createRandomStock(String companyName) {
-		int stockAmount = Main.randomWithRange(10, 30);
-		int stockPrice = Main.randomWithRange(55, 60);
+		int stockAmount = RandomRange.randomWithRange(10, 30);
+		int stockPrice = RandomRange.randomWithRange(55, 60);
 		return new Stock(companyName, stockAmount, stockPrice);
 	}
 
 	@Override
 	public String toString() {
-		return "Stock [companyName=" + companyName + ", stockAmount=" + stockAmount + ", stockPrice=" + stockPrice
+		return "stocks.Stock [companyName=" + companyName + ", stockAmount=" + stockAmount + ", stockPrice=" + stockPrice
 				+ "\u20ac]\n";
 	}
 	

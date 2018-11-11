@@ -1,3 +1,9 @@
+package sellers;
+
+import stocks.Stock;
+import stocks.StockManager;
+import utils.RandomRange;
+
 public class Sellers implements Runnable{
 	
 	@Override
@@ -22,7 +28,7 @@ public class Sellers implements Runnable{
 		System.out.println("Seller " + sellerID + " started!");
 		try {
 			for(;;) {
-				int sleepTime = Main.randomWithRange(1, 3)*1000;
+				int sleepTime = RandomRange.randomWithRange(1, 3)*1000;
 					Thread.sleep(sleepTime);
 					Stock stockToSell = Stock.createRandomStock(this.companyName);
 					putOnSale(stockToSell, this.manager);

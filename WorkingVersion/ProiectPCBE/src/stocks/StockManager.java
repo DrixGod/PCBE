@@ -1,3 +1,5 @@
+package stocks;
+
 import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 

@@ -1,4 +1,10 @@
+package buyers;
+
 import java.util.ArrayList;
+
+import stocks.Stock;
+import stocks.StockManager;
+import utils.RandomRange;
 
 public class Buyers implements Runnable{
 	
@@ -22,7 +28,7 @@ public class Buyers implements Runnable{
 		try {
 			Stock request = Stock.createRandomStock(this.companyName);
 			for(;;) {
-				int sleepTime = Main.randomWithRange(2, 6)*1000;
+				int sleepTime = RandomRange.randomWithRange(2, 6)*1000;
 				Thread.sleep(sleepTime);
 				if(tryToBuy(request)) {
 					request = Stock.createRandomStock(this.companyName);		
@@ -57,7 +63,7 @@ public class Buyers implements Runnable{
 		ArrayList<Stock> transactionList = manager.getTransactionList();
 		
 		System.out.println("Buyer " + buyerID + " tries to buy " + request);
-		System.out.println("Current Stock list: \n" + stockList);
+		System.out.println("Current stocks.Stock list: \n" + stockList);
 		System.out.println("Current Request list: \n" + requestList);
 		System.out.println("Current Transaction list: \n" + transactionList);
 		
@@ -82,7 +88,7 @@ public class Buyers implements Runnable{
 						requestList.remove(request);
 					}
 					
-					System.out.println("Current Stock list: \n" + stockList);
+					System.out.println("Current stocks.Stock list: \n" + stockList);
 					System.out.println("Current Request list: \n" + requestList);
 					System.out.println("Current Transaction list: \n" + transactionList);
 					manager.releaseMutex();
@@ -98,7 +104,7 @@ public class Buyers implements Runnable{
 					transactionList.add(request);
 					request.setStockAmount(requestAmount - stockAmount);
 					stockList.remove(stock);
-					System.out.println("Current Stock list: \n" + stockList);
+					System.out.println("Current stocks.Stock list: \n" + stockList);
 					System.out.println("Current Request list: \n" + requestList);
 					System.out.println("Current Transaction list: \n" + transactionList);
 					manager.releaseMutex();
@@ -112,7 +118,7 @@ public class Buyers implements Runnable{
 		if(!requestList.contains(request)) {
 			requestList.add(request);
 		}
-		System.out.println("Current Stock list: \n" + stockList);
+		System.out.println("Current stocks.Stock list: \n" + stockList);
 		System.out.println("Current Request list: \n" + requestList);
 		System.out.println("Current Transaction list: \n" + transactionList);
 		manager.releaseMutex();

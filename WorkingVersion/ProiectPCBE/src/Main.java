@@ -1,3 +1,8 @@
+import sellers.Sellers;
+import buyers.Buyers;
+import stocks.Stock;
+import stocks.StockManager;
+
 import java.util.ArrayList;
 
 public class Main {
@@ -9,8 +14,8 @@ public class Main {
 
 	public static void main(String[] args) {
 		
-		ArrayList<Thread> sellers = new ArrayList<Thread>();
-		ArrayList<Thread> buyers = new ArrayList<Thread>();
+		ArrayList<Thread> sellers = new ArrayList<>();
+		ArrayList<Thread> buyers = new ArrayList<>();
 		
 		StockManager manager = new StockManager();
 		Sellers seller1 = new Sellers("Nokia", manager);
