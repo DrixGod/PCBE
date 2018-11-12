@@ -41,7 +41,7 @@ public class Buyers implements Runnable {
 
     @Override
     public String toString() {
-        return "Buyer " + buyerID + " stoped buying.\nHe bought " + boughtStocks.size() + " stocks " + boughtStocks;
+        return "Buyer " + buyerID + " stoped buying.";
     }
 
 }

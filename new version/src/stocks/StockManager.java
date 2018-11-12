@@ -31,54 +31,46 @@ public class StockManager {
 		notifyAll();
 	}
 
-	public void lookForMatchingStock() throws InterruptedException {
+	public synchronized void lookForMatchingStock() throws InterruptedException {
 
 		System.out.println("Current Offers. \n" + offersMap);
 		System.out.println("Current Requests: \n" + requestsMap);
 		System.out.println("Current Transactions list: \n" + transactionList);
 
 		requestsMap.entrySet().iterator();
-
-
 		Iterator it = requestsMap.entrySet().iterator();
+
 		while (it.hasNext()) {
 			Map.Entry<Integer, Company>  requestStock = (Map.Entry<Integer, Company>)it.next();
 
 			int sellerId = findSellerForStockRequest(requestStock.getValue());
 
 			if (sellerId != -1) {
-
 				Company offerStock = offersMap.get(sellerId);
 				int stockAmount = offerStock.getStockAmount();
 				int requestAmount = requestStock.getValue().getStockAmount();
 
 				if (stockAmount == requestAmount) {
-					synchronized (this) {
-						transactionList.add(offerStock);
-						offersMap.delete(sellerId);
-						it.remove();
-						transactionList.add(offerStock);
-					}
+					transactionList.add(offerStock);
+					offersMap.delete(sellerId);
+					it.remove();
+					transactionList.add(offerStock);
+
 				} else if (stockAmount > requestAmount) {
-					synchronized (this) {
-						transactionList.add(requestStock.getValue());
-						it.remove();
-						offerStock.setStockAmount(stockAmount - requestAmount);
-					}
-				} else {
-					synchronized (this) {
-						transactionList.add(requestStock.getValue());
-						offersMap.delete(sellerId);
-						requestStock.getValue().setStockAmount(requestAmount - stockAmount);
-						offerStock.setStockAmount(stockAmount - requestAmount);
-					}
+					transactionList.add(requestStock.getValue());
+					it.remove();
+					offerStock.setStockAmount(stockAmount - requestAmount);
+				}
+				else {
+					transactionList.add(requestStock.getValue());
+					offersMap.delete(sellerId);
+					requestStock.getValue().setStockAmount(requestAmount - stockAmount);
+					offerStock.setStockAmount(stockAmount - requestAmount);
+
 				}
 			}
 		}
-
-		synchronized (this) {
-			wait();
-		}
+		wait();
 	}
 
 	private synchronized Integer findSellerForStockRequest(Company request){

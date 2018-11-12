@@ -25,7 +25,7 @@ public class ConcurrentMap<K, V> {
         map.remove(key);
     }
 
-    public Set<Map.Entry<K, V>> entrySet() {
+    public synchronized Set<Map.Entry<K, V>> entrySet() {
         return map.entrySet();
     }
 

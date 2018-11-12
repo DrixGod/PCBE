@@ -36,7 +36,7 @@ public class Sellers implements Runnable{
 
     @Override
     public String toString() {
-        return "Seller " + sellerID + " from " + companyName + " got out of stocks!";
+        return "Seller " + sellerID + " from " + companyName + " stopped.";
     }
 
 }

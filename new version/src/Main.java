@@ -26,12 +26,12 @@ public class Main {
 		Sellers seller2 = new Sellers("Hella", stockManager);
 		Sellers seller3 = new Sellers("Conti", stockManager);
 
-		Buyers buyer1 = new Buyers("A", stockManager);
-		Buyers buyer2 = new Buyers("B", stockManager);
-		Buyers buyer3 = new Buyers("C", stockManager);
-		Buyers buyer4 = new Buyers("D", stockManager);
-		Buyers buyer5 = new Buyers("E", stockManager);
-		Buyers buyer6 = new Buyers("F", stockManager);
+		Buyers buyer1 = new Buyers("Nokia", stockManager);
+		Buyers buyer2 = new Buyers("Hella", stockManager);
+		Buyers buyer3 = new Buyers("Conti", stockManager);
+		Buyers buyer4 = new Buyers("Nokia", stockManager);
+		Buyers buyer5 = new Buyers("Hella", stockManager);
+		Buyers buyer6 = new Buyers("Conti", stockManager);
 
 		Thread stockThread = new Thread(stock);
 
