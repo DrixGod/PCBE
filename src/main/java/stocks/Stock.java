@@ -32,7 +32,8 @@ public class Stock {
 	public void setStockPrice(int stockPrice) {
 		this.stockPrice = stockPrice;
 	}
-	
+
+	//Creeaza un nou stock dupa un nume dat ca si parametru cu actiuni si pret random
 	public static Stock createRandomStock(String companyName) {
 		int stockAmount = RandomRange.randomWithRange(10, 30);
 		int stockPrice = RandomRange.randomWithRange(55, 60);
@@ -41,7 +42,7 @@ public class Stock {
 
 	@Override
 	public String toString() {
-		return "stocks.Stock [companyName=" + companyName + ", stockAmount=" + stockAmount + ", stockPrice=" + stockPrice
+		return "Stock: [companyName=" + companyName + ", stockAmount=" + stockAmount + ", stockPrice=" + stockPrice
 				+ "\u20ac]\n";
 	}
 	
