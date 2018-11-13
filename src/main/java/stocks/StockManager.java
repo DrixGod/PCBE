@@ -31,23 +31,19 @@ public class StockManager {
     }
 
     //Folosim notifyAll() pentru a alerta toate threadurile de adaugarea unei oferte
-    public void addAnOffer(int sellerID, Company stock) {
+    public synchronized void addAnOffer(int sellerID, Company stock) {
         System.out.println("Seller " + sellerID + " added " + stock);
         offersMap.put(sellerID, stock);
-        synchronized (this) {
-            newOfferOrRequest = true;
-            notifyAll();
-        }
+        newOfferOrRequest = true;
+        notifyAll();
     }
 
     //Folosim notifyAll() pentru a alerta toate threadurile de adaugarea unei cereri
-    public void addARequest(int buyerID, Company request) {
+    public synchronized void addARequest(int buyerID, Company request) {
         System.out.println("Buyer " + buyerID + " tries to buy " + request);
         requestsMap.put(buyerID, request);
-        synchronized (this) {
-            newOfferOrRequest = true;
-            notifyAll();
-        }
+        newOfferOrRequest = true;
+        notifyAll();
     }
 
     /*

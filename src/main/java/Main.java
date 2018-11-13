@@ -73,7 +73,7 @@ public class Main {
         }
 
         try {
-            Thread.sleep(5000);
+            Thread.sleep(10000);
 
             for(Thread seller : sellers) {
                 if(seller.isAlive()) { //verificare daca thread-ul inca ruleaza
