@@ -17,10 +17,6 @@ public class ConcurrentMap<K, V> {
         return map.get(key);
     }
 
-    public synchronized void replace(K key, V value) {
-        map.replace(key, value);
-    }
-
     public synchronized void delete(K key) {
         map.remove(key);
     }

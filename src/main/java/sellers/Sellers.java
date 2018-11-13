@@ -27,11 +27,12 @@ public class Sellers implements Runnable{
 	public void run() {
 		System.out.println("Seller " + sellerID + " started!");
 		try {
-			for(int i=0;i<100;i++) {
-				int sleepTime = RandomRange.randomWithRange(1, 3)*1000;
-				Thread.sleep(sleepTime); // Folosim un timp random de asteptare pentru a simula cat mai bine un caz real
+			while(true) {
 				Company stockToSell = new Company(this.companyName);
 				stockManager.addAnOffer(sellerID, stockToSell);
+
+				int sleepTime = RandomRange.randomWithRange(1, 3)*1000;
+				Thread.sleep(sleepTime); // Folosim un timp random de asteptare pentru a simula cat mai bine un caz real
 			}
 		}catch(InterruptedException e) {
 			System.out.println(this);

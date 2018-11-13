@@ -2,9 +2,8 @@
 import sellers.Sellers;
 import buyers.Buyers;
 import companies.Company;
-import stocks.Stock;
+import transactions.Transaction;
 import stocks.StockManager;
-import utils.RandomRange;
 
 import java.util.ArrayList;
 
@@ -19,7 +18,7 @@ public class Main {
         //Obiect pentru managerul de bursa
         StockManager manager = new StockManager();
 
-        Stock stock = new Stock(manager);
+        Transaction stock = new Transaction(manager);
 
         //Initializare vanzatori
         Sellers seller1 = new Sellers("Nokia", manager);
@@ -74,19 +73,7 @@ public class Main {
         }
 
         try {
-			/*
-			Facem join pentru a astepta pana ce threadurile au terminat de rulat.
-			Astfel metoda main va astepta pana ce lista de threaduri sellers si buyers vor fi terminate.
-			 */
-            stockThread.join();
-
-            for(Thread seller : sellers) {
-                seller.join(RandomRange.randomWithRange(5, 10) * 1000);
-            }
-
-            for(Thread buyer : buyers) {
-                buyer.join(RandomRange.randomWithRange(5, 10) * 1000);
-            }
+            Thread.sleep(5000);
 
             for(Thread seller : sellers) {
                 if(seller.isAlive()) { //verificare daca thread-ul inca ruleaza
@@ -99,6 +86,9 @@ public class Main {
                     buyer.interrupt();
                 }
             }
+
+            stockThread.interrupt();
+
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

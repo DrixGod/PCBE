@@ -31,25 +31,29 @@ public class StockManager {
     }
 
     //Folosim notifyAll() pentru a alerta toate threadurile de adaugarea unei oferte
-    public synchronized void addAnOffer(int sellerID, Company stock) throws InterruptedException {
+    public void addAnOffer(int sellerID, Company stock) {
         System.out.println("Seller " + sellerID + " added " + stock);
         offersMap.put(sellerID, stock);
-        newOfferOrRequest = true;
-        notifyAll();
+        synchronized (this) {
+            newOfferOrRequest = true;
+            notifyAll();
+        }
     }
 
     //Folosim notifyAll() pentru a alerta toate threadurile de adaugarea unei cereri
-    public synchronized void addARequest(int buyerID, Company request) throws InterruptedException {
+    public void addARequest(int buyerID, Company request) {
         System.out.println("Buyer " + buyerID + " tries to buy " + request);
         requestsMap.put(buyerID, request);
-        newOfferOrRequest = true;
-        notifyAll();
+        synchronized (this) {
+            newOfferOrRequest = true;
+            notifyAll();
+        }
     }
 
     /*
     Metoda folosita pentru a cauta cereri si oferte care corespund pentru a realiza o vanzare de stockuri
      */
-    public void lookForMatchingStock() throws InterruptedException {
+    public void lookForMatchingStock(){
 
         /*System.out.println("Current Offers. \n" + offersMap);
         System.out.println("Current Requests: \n" + requestsMap);
@@ -72,7 +76,6 @@ public class StockManager {
                         addTransaction(offerStock);
                         offersMap.delete(sellerId);
                         it.remove();
-                        Buyers.addBoughtStocks(offerStock);
                         System.out.println("Buyer " + requestStock.getKey() + " bought " + stockAmount + " stocks from " + offerStock.getCompanyName() + " at " + offerStock.getStockPrice() + "\n");
 
                         //Daca numarul de actiuni din cerere este mai mic decat cel din oferta vom face vanzarea si vom substrage numarul de actiuni vandute din oferta
@@ -80,7 +83,6 @@ public class StockManager {
                         addTransaction(requestStock.getValue());
                         it.remove();
                         offerStock.setStockAmount(stockAmount - requestAmount);
-                        Buyers.addBoughtStocks(offerStock);
                         System.out.println("Buyer " + requestStock.getKey() + " bought " + stockAmount + " stocks from " + offerStock.getCompanyName() + " at " + offerStock.getStockPrice() + "\n");
                     }
 
@@ -90,7 +92,6 @@ public class StockManager {
                         offersMap.delete(sellerId);
                         requestStock.getValue().setStockAmount(requestAmount - stockAmount);
                         offerStock.setStockAmount(stockAmount - requestAmount);
-                        Buyers.addBoughtStocks(offerStock);
                         System.out.println("Buyer " + requestStock.getKey() + " bought " + stockAmount + " stocks from " + offerStock.getCompanyName() + " at " + offerStock.getStockPrice() + "\n");
                     }
                 }
@@ -119,31 +120,11 @@ public class StockManager {
         return -1;
     }
 
-    public ConcurrentMap<Integer, Company> getRequestsMap() {
-        return requestsMap;
-    }
-
-    public void setRequestsMap(ConcurrentMap<Integer, Company> requestsMap) {
-        this.requestsMap = requestsMap;
-    }
-
-    public ConcurrentMap<Integer, Company> getOffersMap() {
-        return offersMap;
-    }
-
-    public void setOffersMap(ConcurrentMap<Integer, Company> offersMap) {
-        this.offersMap = offersMap;
-    }
-
     public ArrayList<Company> getTransactionList() {
         return transactionList;
     }
 
-    public void setTransactionList(ArrayList<Company> transactionList) {
-        StockManager.transactionList = transactionList;
-    }
-
-    public static void addTransaction(Company company){
+    private synchronized void addTransaction(Company company){
         transactionList.add(company);
     }
 }
