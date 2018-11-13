@@ -2,8 +2,8 @@
 import sellers.Sellers;
 import buyers.Buyers;
 import companies.Company;
+import stocks.Stock;
 import transactions.Transaction;
-import stocks.StockManager;
 
 import java.util.ArrayList;
 
@@ -16,9 +16,9 @@ public class Main {
         ArrayList<Thread> buyers = new ArrayList<>();
 
         //Obiect pentru managerul de bursa
-        StockManager manager = new StockManager();
+        Stock manager = new Stock();
 
-        Transaction stock = new Transaction(manager);
+        Transaction transaction = new Transaction(manager);
 
         //Initializare vanzatori
         Sellers seller1 = new Sellers("Nokia", manager);
@@ -33,8 +33,8 @@ public class Main {
         Buyers buyer5 = new Buyers("Hella", manager);
         Buyers buyer6 = new Buyers("Conti", manager);
 
-        Thread stockThread = new Thread(stock);
-        stockThread.start();
+        Thread transactionThread = new Thread(transaction);
+        transactionThread.start();
 
         //Initializare threaduri de vanzatori
         Thread s1 = new Thread(seller1);
@@ -87,7 +87,7 @@ public class Main {
                 }
             }
 
-            stockThread.interrupt();
+            transactionThread.interrupt();
 
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -104,7 +104,7 @@ public class Main {
 
 Cazuri de concurenta care ar putea sa apara:
 
-- bursa detine lock-ul pentru StockManager si asteapta sa apara un vanzator si un cumparator, insa acestia nu pot
+- bursa detine lock-ul pentru Stock si asteapta sa apara un vanzator si un cumparator, insa acestia nu pot
 scrie ofertele/cererile pentru ca nu au lock-ul
 - bursa gaseste o potrivire intre cerere si oferta, insa in acel moment cererea sau oferta se modifica
 -

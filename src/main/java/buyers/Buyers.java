@@ -1,22 +1,22 @@
 package buyers;
 
 import companies.Company;
-import stocks.StockManager;
+import stocks.Stock;
 import utils.RandomRange;
 
 /*
 Clasa Buyers este folosita pentru a creea o instanta a unui cumparator.
 Clasa implementeaza interfata Runnable si suprascrie metoda run.
-Atunci cand un thread este pornit, in metoda run se vor creea cereri de tipul numelui dat ca parametru si se vor adauca ca si cerere in StockManager
+Atunci cand un thread este pornit, in metoda run se vor creea cereri de tipul numelui dat ca parametru si se vor adauca ca si cerere in Stock
  */
 public class Buyers implements Runnable {
 
-	private StockManager stockManager;
+	private Stock stockManager;
 	private static int totalBuyers = 0;
 	private String companyName;
 	private int buyerID;
 
-    public Buyers(String companyName, StockManager manager) {
+    public Buyers(String companyName, Stock manager) {
 		totalBuyers++;
 		this.companyName = companyName;
 		this.stockManager = manager;

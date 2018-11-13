@@ -1,22 +1,22 @@
 package sellers;
 
 import companies.Company;
-import stocks.StockManager;
+import stocks.Stock;
 import utils.RandomRange;
 
 /*
 Clasa Sellers este folosita pentru a creea o instanta a unui vanzator.
 Clasa implementeaza interfata Runnable si suprascrie metoda run.
-Atunci cand un thread este pornit, in metoda run se vor creea stocuri de tipul numelui dat ca parametru si se vor adauca ca si oferte in StockManager
+Atunci cand un thread este pornit, in metoda run se vor creea stocuri de tipul numelui dat ca parametru si se vor adauca ca si oferte in Stock
  */
 public class Sellers implements Runnable{
 
 	private static int totalSellers = 0;
 	private int sellerID;
 	private String companyName;
-	private StockManager stockManager;
+	private Stock stockManager;
 
-	public Sellers(String companyName, StockManager manager) {
+	public Sellers(String companyName, Stock manager) {
 		totalSellers++;
 		this.sellerID = totalSellers;
 		this.companyName = companyName;

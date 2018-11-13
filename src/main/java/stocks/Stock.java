@@ -9,7 +9,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 /*
-Clasa StockManager se ocupa de adaugare de cereri/oferte, gasirea cererilor si ofertelor care se potrivesc si realizarea de vanzari efective
+Clasa Stock se ocupa de adaugare de cereri/oferte, gasirea cererilor si ofertelor care se potrivesc si realizarea de vanzari efective
 Folosirea metodelor synchronized:
     Metodele synchronized folosesc o strategie care nu permite interferente intre threaduri si erori de memorie.
     Daca un obiect este visibil mai multor threaduri, orice scriere/citire asupra acelui obiect se face prin metode synchronized
@@ -17,14 +17,14 @@ Folosirea metodelor synchronized:
 
 In cazul de fata Bursa, cumparatorii cat si vanzatorii trebuie sa poata vedea toate schimbarile care apar pentru a putea realiza schimburi in timp real.
  */
-public class StockManager {
+public class Stock {
 
     private volatile ConcurrentMap<Integer, Company> requestsMap;
     private volatile ConcurrentMap<Integer, Company> offersMap;
     private static volatile ArrayList<Company> transactionList;
     private volatile boolean newOfferOrRequest = false;
 
-    public StockManager() {
+    public Stock() {
         requestsMap = new ConcurrentMap<Integer, Company>();
         offersMap = new ConcurrentMap<Integer, Company>();
         transactionList = new ArrayList<Company>();

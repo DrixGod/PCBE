@@ -1,12 +1,12 @@
 package transactions;
 
-import stocks.StockManager;
+import stocks.Stock;
 
 public class Transaction implements Runnable {
 
-	private StockManager stockManager;
+	private Stock stockManager;
 
-	public Transaction(StockManager manager) {
+	public Transaction(Stock manager) {
 		this.stockManager = manager;
 	}
 
