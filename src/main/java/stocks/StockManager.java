@@ -22,6 +22,7 @@ public class StockManager {
     private volatile ConcurrentMap<Integer, Company> requestsMap;
     private volatile ConcurrentMap<Integer, Company> offersMap;
     private static volatile ArrayList<Company> transactionList;
+    private volatile boolean newOfferOrRequest = false;
 
     public StockManager() {
         requestsMap = new ConcurrentMap<Integer, Company>();
@@ -33,6 +34,7 @@ public class StockManager {
     public synchronized void addAnOffer(int sellerID, Company stock) throws InterruptedException {
         System.out.println("Seller " + sellerID + " added " + stock);
         offersMap.put(sellerID, stock);
+        newOfferOrRequest = true;
         notifyAll();
     }
 
@@ -40,59 +42,67 @@ public class StockManager {
     public synchronized void addARequest(int buyerID, Company request) throws InterruptedException {
         System.out.println("Buyer " + buyerID + " tries to buy " + request);
         requestsMap.put(buyerID, request);
+        newOfferOrRequest = true;
         notifyAll();
     }
 
     /*
     Metoda folosita pentru a cauta cereri si oferte care corespund pentru a realiza o vanzare de stockuri
      */
-    public synchronized void lookForMatchingStock() throws InterruptedException {
+    public void lookForMatchingStock() throws InterruptedException {
 
         /*System.out.println("Current Offers. \n" + offersMap);
         System.out.println("Current Requests: \n" + requestsMap);
         System.out.println("Current Transactions list: \n" + transactionList);*/
 
-        Iterator it = requestsMap.entrySet().iterator(); //Luam toate cererile curente.
+        synchronized (this) {
+            Iterator it = requestsMap.entrySet().iterator(); //Luam toate cererile curente.
 
-        while (it.hasNext()) {
-            Map.Entry<Integer, Company>  requestStock = (Map.Entry<Integer, Company>)it.next();
+            while (it.hasNext()) {
+                Map.Entry<Integer, Company> requestStock = (Map.Entry<Integer, Company>) it.next();
 
-            int sellerId = findSellerForStockRequest(requestStock.getValue());
+                int sellerId = findSellerForStockRequest(requestStock.getValue());
 
-            if (sellerId != -1) {
-                Company offerStock = offersMap.get(sellerId);
-                int stockAmount = offerStock.getStockAmount();
-                int requestAmount = requestStock.getValue().getStockAmount();
-                //Daca numarul de actiuni din cerere este egal cu cel din oferta vom face vanzarea si vom sterge oferta respectiva deoarece nu vor mai exista actiuni in ea
-                if (stockAmount == requestAmount) {
-                    addTransaction(offerStock);
-                    offersMap.delete(sellerId);
-                    it.remove();
-                    transactionList.add(offerStock);
-                    Buyers.addBoughtStocks(offerStock);
-                    System.out.println("Buyer " + requestStock.getKey() + " bought " + stockAmount + " stocks from " + offerStock.getCompanyName() + " at " + offerStock.getStockPrice() + "\n");
+                if (sellerId != -1) {
+                    Company offerStock = offersMap.get(sellerId);
+                    int stockAmount = offerStock.getStockAmount();
+                    int requestAmount = requestStock.getValue().getStockAmount();
+                    //Daca numarul de actiuni din cerere este egal cu cel din oferta vom face vanzarea si vom sterge oferta respectiva deoarece nu vor mai exista actiuni in ea
+                    if (stockAmount == requestAmount) {
+                        addTransaction(offerStock);
+                        offersMap.delete(sellerId);
+                        it.remove();
+                        Buyers.addBoughtStocks(offerStock);
+                        System.out.println("Buyer " + requestStock.getKey() + " bought " + stockAmount + " stocks from " + offerStock.getCompanyName() + " at " + offerStock.getStockPrice() + "\n");
 
-                //Daca numarul de actiuni din cerere este mai mic decat cel din oferta vom face vanzarea si vom substrage numarul de actiuni vandute din oferta
-                } else if (stockAmount > requestAmount) {
-                    addTransaction(requestStock.getValue());
-                    it.remove();
-                    offerStock.setStockAmount(stockAmount - requestAmount);
-                    Buyers.addBoughtStocks(offerStock);
-                    System.out.println("Buyer " + requestStock.getKey() + " bought " + stockAmount + " stocks from " + offerStock.getCompanyName() + " at " + offerStock.getStockPrice() + "\n");
+                        //Daca numarul de actiuni din cerere este mai mic decat cel din oferta vom face vanzarea si vom substrage numarul de actiuni vandute din oferta
+                    } else if (stockAmount > requestAmount) {
+                        addTransaction(requestStock.getValue());
+                        it.remove();
+                        offerStock.setStockAmount(stockAmount - requestAmount);
+                        Buyers.addBoughtStocks(offerStock);
+                        System.out.println("Buyer " + requestStock.getKey() + " bought " + stockAmount + " stocks from " + offerStock.getCompanyName() + " at " + offerStock.getStockPrice() + "\n");
+                    }
+
+                    //Daca numarul de actiuni din cerere este mai mare decat cel din oferta vom face vanzarea si vom substrage numarul de actiuni vandute din cerere
+                    else {
+                        addTransaction(requestStock.getValue());
+                        offersMap.delete(sellerId);
+                        requestStock.getValue().setStockAmount(requestAmount - stockAmount);
+                        offerStock.setStockAmount(stockAmount - requestAmount);
+                        Buyers.addBoughtStocks(offerStock);
+                        System.out.println("Buyer " + requestStock.getKey() + " bought " + stockAmount + " stocks from " + offerStock.getCompanyName() + " at " + offerStock.getStockPrice() + "\n");
+                    }
                 }
-
-                //Daca numarul de actiuni din cerere este mai mare decat cel din oferta vom face vanzarea si vom substrage numarul de actiuni vandute din cerere
-                else {
-                    addTransaction(requestStock.getValue());
-                    offersMap.delete(sellerId);
-                    requestStock.getValue().setStockAmount(requestAmount - stockAmount);
-                    offerStock.setStockAmount(stockAmount - requestAmount);
-                    Buyers.addBoughtStocks(offerStock);
-                    System.out.println("Buyer " + requestStock.getKey() + " bought " + stockAmount + " stocks from " + offerStock.getCompanyName() + " at " + offerStock.getStockPrice() + "\n");
+            }
+            newOfferOrRequest = false;
+            while (!newOfferOrRequest) {
+                try {
+                    wait();
+                } catch (InterruptedException e) {
                 }
             }
         }
-        wait();
     }
 
     /*
@@ -108,7 +118,6 @@ public class StockManager {
         }
         return -1;
     }
-
 
     public ConcurrentMap<Integer, Company> getRequestsMap() {
         return requestsMap;

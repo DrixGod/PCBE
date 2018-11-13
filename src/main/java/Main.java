@@ -4,15 +4,11 @@ import buyers.Buyers;
 import companies.Company;
 import stocks.Stock;
 import stocks.StockManager;
+import utils.RandomRange;
 
 import java.util.ArrayList;
 
 public class Main {
-    public static int randomWithRange(int min, int max)
-    {
-        int range = Math.abs(max - min) + 1;
-        return (int)(Math.random() * range) + (min <= max ? min : max);
-    }
 
     public static void main(String[] args) {
 
@@ -85,11 +81,11 @@ public class Main {
             stockThread.join();
 
             for(Thread seller : sellers) {
-                seller.join(randomWithRange(5,10)*1000);
+                seller.join(RandomRange.randomWithRange(5, 10) * 1000);
             }
 
             for(Thread buyer : buyers) {
-                buyer.join(randomWithRange(5,10)*1000);
+                buyer.join(RandomRange.randomWithRange(5, 10) * 1000);
             }
 
             for(Thread seller : sellers) {
@@ -110,7 +106,17 @@ public class Main {
         ArrayList<Company> transactions = manager.getTransactionList();
 
         System.out.println("Transaction list contains " + transactions.size() + " items.\nThe sold stocks are:\n" + transactions);
-
     }
 
 }
+
+/*
+
+Cazuri de concurenta care ar putea sa apara:
+
+- bursa detine lock-ul pentru StockManager si asteapta sa apara un vanzator si un cumparator, insa acestia nu pot
+scrie ofertele/cererile pentru ca nu au lock-ul
+- bursa gaseste o potrivire intre cerere si oferta, insa in acel moment cererea sau oferta se modifica
+-
+
+ */
