@@ -96,17 +96,9 @@ public class Main {
         ArrayList<Company> transactions = manager.getTransactionList();
 
         System.out.println("Transaction list contains " + transactions.size() + " items.\nThe sold stocks are:\n" + transactions);
+
+
     }
 
 }
 
-/*
-
-Cazuri de concurenta care ar putea sa apara:
-
-- bursa detine lock-ul pentru Stock si asteapta sa apara un vanzator si un cumparator, insa acestia nu pot
-scrie ofertele/cererile pentru ca nu au lock-ul
-- bursa gaseste o potrivire intre cerere si oferta, insa in acel moment cererea sau oferta se modifica
--
-
- */
